@@ -21,6 +21,8 @@ class MenuGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GridView.count(
+      // Wajib: tanpa ini GridView menambah padding setinggi status bar
+      padding: EdgeInsets.zero,
       crossAxisCount: 4,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),

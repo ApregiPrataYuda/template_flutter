@@ -8,6 +8,7 @@ import '../../features/product/screens/product_screen.dart';
 import '../../features/profile/screens/profile_screen.dart';
 import '../../shared/widgets/menu_page.dart';
 import '../../shared/widgets/placeholder_screen.dart';
+import '../../features/notification/screens/notification_screen.dart';
 import 'route_names.dart';
 
 class AppRouter {
@@ -90,6 +91,11 @@ class AppRouter {
             GoRoute(
               path: Routes.product,
               builder: (c, s) => const ProductScreen(),
+            ),
+
+                        GoRoute(
+              path: Routes.notification,
+              builder: (c, s) => const NotificationScreen(),
             ),
 
             // Fitur yang masih placeholder

@@ -5,6 +5,8 @@ import 'core/router/app_router.dart';
 import 'core/services/api_service.dart';
 import 'core/theme/app_theme.dart';
 import 'features/auth/providers/auth_provider.dart';
+import 'features/notification/data/repositories/notification_repository.dart';
+import 'features/notification/providers/notification_provider.dart';
 
 class App extends StatefulWidget {
   final AuthProvider auth;
@@ -31,6 +33,13 @@ class _AppState extends State<App> {
       providers: [
         ChangeNotifierProvider.value(value: widget.auth),
         Provider<ApiService>.value(value: widget.api),
+
+        // Ikut status login: login = muat notifikasi, logout = kosongkan
+        ChangeNotifierProxyProvider<AuthProvider, NotificationProvider>(
+          create: (_) =>
+              NotificationProvider(NotificationRepository(widget.api)),
+          update: (_, auth, notif) => notif!..onAuthChanged(auth.isLoggedIn),
+        ),
       ],
       child: MaterialApp.router(
         title: 'Template Flutter',

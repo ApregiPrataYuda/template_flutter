@@ -36,5 +36,7 @@ class Routes {
   static const orderHistory = '/order-history';
   static const promo = '/promo';
   static const help = '/help';
-    static const inquiry = '/inquiry';
+  static const inquiry = '/inquiry';
+    // Notifikasi (dari lonceng di top bar)
+  static const notification = '/notification';
 }

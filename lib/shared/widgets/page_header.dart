@@ -7,7 +7,10 @@ import '../../core/theme/app_text_styles.dart';
 class PageHeader extends StatelessWidget {
   final String title;
 
-  const PageHeader({super.key, required this.title});
+  /// Widget opsional di kanan judul, misalnya tombol aksi
+  final Widget? trailing;
+
+  const PageHeader({super.key, required this.title, this.trailing});
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +28,15 @@ class PageHeader extends StatelessWidget {
               }
             },
           ),
-          Text(title, style: AppTextStyles.h3),
+          Expanded(
+            child: Text(
+              title,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.h3,
+            ),
+          ),
+          ?trailing,
         ],
       ),
     );

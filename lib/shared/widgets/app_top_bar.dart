@@ -88,7 +88,9 @@ class AppTopBar extends StatelessWidget {
                     padding: const EdgeInsets.all(10),
                     child: Badge(
                       isLabelVisible: notificationCount > 0,
-                      label: Text('$notificationCount'),
+                                           label: Text(
+                        notificationCount > 99 ? '99+' : '$notificationCount',
+                      ),
                       backgroundColor: AppColors.warning,
                       textColor: Colors.white,
                       child: const Icon(

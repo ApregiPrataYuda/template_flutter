@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/constants/app_sizes.dart';
 import '../../../core/router/route_names.dart';
 import '../../../core/theme/app_text_styles.dart';
-import '../../../shared/widgets/home_greeting.dart';
+// import '../../../shared/widgets/home_greeting.dart';
 import '../../../shared/widgets/menu_grid.dart';
 import '../../../shared/widgets/stat_card.dart';
 import '../../../shared/widgets/stat_row.dart';
@@ -29,8 +30,8 @@ class SalesHomeScreen extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(AppSizes.md),
       children: [
-        const HomeGreeting(title: 'Ready for', accent: "Today's Visits"),
-        const SizedBox(height: AppSizes.md),
+        // const HomeGreeting(title: 'Ready for', accent: "Today's Visits"),
+        // const SizedBox(height: AppSizes.md),
 
         // Data dummy, diganti API nanti
         const VisitPlanCard(
@@ -40,25 +41,28 @@ class SalesHomeScreen extends StatelessWidget {
         ),
         const SizedBox(height: AppSizes.md),
 
-        const StatRow(
+        StatRow(
           cards: [
             StatCard(
               icon: Icons.calendar_today_outlined,
               value: '20',
               label: 'Visit Plan',
               caption: 'Scheduled today',
+              onTap: () => context.go(Routes.visit),
             ),
             StatCard(
               icon: Icons.check,
-              value: '20',
-              label: 'Visited',
-              caption: 'Completed today',
+              value: '12',
+              label: 'Outstanding Progress',
+              caption: 'Scheduled month',
+              onTap: () => context.push(Routes.followUp),
             ),
             StatCard(
               icon: Icons.groups_outlined,
-              value: '20',
-              label: 'Business Partner',
-              caption: 'Active accounts',
+              value: '2/35',
+              label: 'Market Coverage',
+              caption: 'Lead & Customer',
+              onTap: () => context.push(Routes.businessPartner),
             ),
           ],
         ),

@@ -20,4 +20,10 @@ class AppColors {
   static const Color border = Color(0xFFDDE6D5);      // turunan dari palet, untuk garis tipis
   static const Color textPrimary = Color(0xFF1A2414);
   static const Color textSecondary = Color(0xFF97A392);
+
+
+    // Status
+  static const Color successDark = Color(0xFF3F7A20); // bg toast, kontras ±5.2:1
+  static const Color errorDark = Color(0xFFC53030);   // bg toast, kontras ±5.5:1
+  
 }

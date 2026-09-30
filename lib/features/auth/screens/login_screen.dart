@@ -6,8 +6,11 @@ import '../../../core/constants/app_sizes.dart';
 import '../../../core/router/route_names.dart';
 import '../../../core/theme/app_text_styles.dart';
 import '../../../core/utils/validators.dart';
+import '../../../shared/widgets/app_background.dart';
 import '../../../shared/widgets/app_button.dart';
+import '../../../shared/widgets/app_card.dart';
 import '../../../shared/widgets/app_text_field.dart';
+import '../../../shared/widgets/app_toast.dart';
 import '../providers/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -29,12 +32,10 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  Future<void> _submit() async {
-    // Jalankan semua validator; berhenti kalau ada yang gagal
+    Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
 
     final auth = context.read<AuthProvider>();
-    final messenger = ScaffoldMessenger.of(context);
 
     final success = await auth.login(
       email: _emailController.text.trim(),
@@ -42,13 +43,8 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     // Kalau sukses, router otomatis pindah ke Home.
-    if (!success) {
-      messenger.showSnackBar(
-        SnackBar(
-          content: Text(auth.errorMessage ?? 'Terjadi kesalahan'),
-          backgroundColor: AppColors.error,
-        ),
-      );
+    if (!success && mounted) {
+      AppToast.error(context, auth.errorMessage ?? 'There is an error');
     }
   }
 
@@ -57,69 +53,94 @@ class _LoginScreenState extends State<LoginScreen> {
     final isLoading = context.watch<AuthProvider>().isLoading;
 
     return Scaffold(
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.all(AppSizes.lg),
-            child: Form(
-              key: _formKey,
+      body: AppBackground(
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(AppSizes.lg),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Container(
-                    padding: const EdgeInsets.all(AppSizes.md),
-                    decoration: BoxDecoration(
-                      color: AppColors.primarySoft,
-                      borderRadius: BorderRadius.circular(AppSizes.radiusLg),
-                    ),
-                    child: const Icon(
-                      Icons.location_on,
-                      size: 32,
-                      color: AppColors.primary,
-                    ),
-                  ),
-                  const SizedBox(height: AppSizes.lg),
-                  Text('Selamat datang', style: AppTextStyles.h1),
-                  const SizedBox(height: AppSizes.xs),
-                  Text('Masuk untuk melanjutkan', style: AppTextStyles.caption),
-                  const SizedBox(height: AppSizes.xl),
-                  AppTextField(
-                    label: 'Email',
-                    hint: 'nama@email.com',
-                    controller: _emailController,
-                    prefixIcon: Icons.email_outlined,
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
-                    validator: Validators.email,
-                  ),
-                  const SizedBox(height: AppSizes.md),
-                  AppTextField(
-                    label: 'Password',
-                    hint: 'Masukkan password',
-                    controller: _passwordController,
-                    prefixIcon: Icons.lock_outline,
-                    isPassword: true,
-                    textInputAction: TextInputAction.done,
-                    validator: Validators.password,
-                  ),
-                  const SizedBox(height: AppSizes.lg),
-                  AppButton(
-                    label: 'Masuk',
-                    isLoading: isLoading,
-                    onPressed: _submit,
-                  ),
-                  const SizedBox(height: AppSizes.md),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text('Belum punya akun?', style: AppTextStyles.caption),
-                      TextButton(
-                        onPressed: isLoading
-                            ? null
-                            : () => context.go(Routes.register),
-                        child: const Text('Daftar'),
+                  // Header di atas kartu
+                  Center(
+                    child: Container(
+                      padding: const EdgeInsets.all(AppSizes.md),
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(AppSizes.radiusLg),
+                        border: Border.all(color: AppColors.border),
                       ),
-                    ],
+                      child: const Icon(
+                        Icons.dashboard_outlined,
+                        size: 32,
+                        color: AppColors.primary,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSizes.md),
+                  Text(
+                    'Wellcome',
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.h2,
+                  ),
+                  const SizedBox(height: AppSizes.xs),
+                  Text(
+                    'Sign in to continue',
+                    textAlign: TextAlign.center,
+                    style: AppTextStyles.caption,
+                  ),
+                  const SizedBox(height: AppSizes.lg),
+
+                  // Form di dalam kartu
+                  AppCard(
+                    padding: const EdgeInsets.all(AppSizes.lg),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          AppTextField(
+                            label: 'Email',
+                            hint: 'account@email.com',
+                            controller: _emailController,
+                            prefixIcon: Icons.email_outlined,
+                            keyboardType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            validator: Validators.email,
+                          ),
+                          const SizedBox(height: AppSizes.md),
+                          AppTextField(
+                            label: 'Password',
+                            hint: 'Enter password',
+                            controller: _passwordController,
+                            prefixIcon: Icons.lock_outline,
+                            isPassword: true,
+                            textInputAction: TextInputAction.done,
+                            validator: Validators.password,
+                          ),
+                          const SizedBox(height: AppSizes.lg),
+                          AppButton(
+                            label: 'Login',
+                            isLoading: isLoading,
+                            onPressed: _submit,
+                          ),
+                          const SizedBox(height: AppSizes.sm),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text('Dont have an account yet?',
+                                  style: AppTextStyles.caption),
+                              TextButton(
+                                onPressed: isLoading
+                                    ? null
+                                    : () => context.go(Routes.register),
+                                child: const Text('Register'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ],
               ),

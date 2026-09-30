@@ -5,16 +5,20 @@ import '../../core/router/route_names.dart';
 import '../../shared/widgets/app_background.dart';
 import '../../shared/widgets/app_top_bar.dart';
 import '../auth/providers/auth_provider.dart';
+import '../notification/providers/notification_provider.dart';
+import '../../core/constants/app_colors.dart';
+import '../../shared/widgets/app_bottom_bar.dart';
 import 'nav_config.dart';
 
 class MainLayout extends StatelessWidget {
   final Widget child;
-
+ 
   const MainLayout({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
     final auth = context.watch<AuthProvider>();
+    final unread = context.watch<NotificationProvider>().unreadCount;
 
     // Saat logout, role sempat null sebentar sebelum router pindah ke Login
     final role = auth.role;
@@ -30,20 +34,26 @@ class MainLayout extends StatelessWidget {
     }
     if (index < 0) index = 0;
 
-    return Scaffold(
+       return Scaffold(
+      // Putih, supaya area di balik sudut bottom bar tidak terlihat abu-abu
+      backgroundColor: AppColors.surface,
       body: AppBackground(
         child: Column(
           children: [
             AppTopBar(
               name: auth.name,
-              notificationCount: 2, // dummy, dari API di Tahap 8
-              onNotificationTap: () {},
+              notificationCount: unread,
+              onNotificationTap: () {
+                if (location != Routes.notification) {
+                  context.push(Routes.notification);
+                }
+              },
             ),
             Expanded(child: child),
           ],
         ),
       ),
-      bottomNavigationBar: NavigationBar(
+      bottomNavigationBar: AppBottomBar(
         selectedIndex: index,
         onDestinationSelected: (i) => context.go(items[i].path),
         destinations: [
